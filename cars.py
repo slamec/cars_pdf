@@ -59,7 +59,7 @@ def process_data(data):
 
       "The {} had the most sales: {}".format(format_car(max_sales["car"]), max_sales["sales"]),
 
-      "The {} had the most sales in year: {}".format(format_car(max_sales["car"]), max_year["year"])      
+      "The most popular year was {} with: {} sales".format(max_year["year"], max_sales["sales"])      
   ]
 
   return summary
