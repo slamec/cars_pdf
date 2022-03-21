@@ -3,7 +3,9 @@
 import json
 import locale
 import sys
-from tkinter.messagebox import YESNOCANCEL
+from reportlab.platypus import SimpleDocTemplate
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import Paragraph, Spacer, Table, Image
 
 
 def load_data(filename):
@@ -73,6 +75,25 @@ def main(argv):
   summary = process_data(data)
   print(summary)
   # TODO: turn this into a PDF report
+  report = SimpleDocTemplate("c:/Users/Miro/My Drive/Python_coursera/6 Automating real world tasks/cars_pdf/test.pdf")
+  styles = getSampleStyleSheet()
+  report_title = Paragraph("A complete report of car sales", styles["h1"])
+  
+  split_summary = ""
+
+  for i in summary:
+    split_summary += i + "<br /> <br />"
+    
+
+    print(split_summary)
+
+
+  report_main = Paragraph(split_summary, styles["h2"])
+
+
+  report.build([report_title, report_main])
+
+
 
   # TODO: send the PDF report as an email attachment
 
