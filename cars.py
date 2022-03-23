@@ -6,6 +6,8 @@ import sys
 from reportlab.platypus import SimpleDocTemplate
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import Paragraph, Spacer, Table, Image
+from reportlab.lib import colors
+from email.message import EmailMessage
 
 
 def load_data(filename):
@@ -63,9 +65,12 @@ def process_data(data):
 
 def cars_dict_to_table(car_data):
   """Turns the data in car_data into a list of lists."""
+  
   table_data = [["ID", "Car", "Price", "Total Sales"]]
   for item in car_data:
     table_data.append([item["id"], format_car(item["car"]), item["price"], item["total_sales"]])
+
+
   return table_data
 
 
@@ -74,11 +79,8 @@ def main(argv):
   data = load_data("car_sales.json")
   summary = process_data(data)
   print(summary)
-  # TODO: turn this into a PDF report
-  report = SimpleDocTemplate("c:/Users/Miro/My Drive/Python_coursera/6 Automating real world tasks/cars_pdf/test.pdf")
-  styles = getSampleStyleSheet()
-  report_title = Paragraph("A complete report of car sales", styles["h1"])
-  
+
+
   split_summary = ""
 
   for i in summary:
@@ -88,10 +90,18 @@ def main(argv):
     print(split_summary)
 
 
-  report_main = Paragraph(split_summary, styles["h2"])
+  styles = getSampleStyleSheet()
+  report = SimpleDocTemplate("cars.pdf")
+  report_title = Paragraph("A complete report of car sales", styles["h1"])
+  report_info = Paragraph(split_summary, styles["BodyText"])
+  table_style = [('GRID', (0,0), (-1,-1), 1, colors.black),
+                ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+                ('ALIGN', (0,0), (-1,-1), 'CENTER')]
+  report_table = Table(data = cars_dict_to_table(data), style = table_style, hAlign="LEFT")
+  empty_line = Spacer(1,20)
 
+  report.build([report_title, empty_line, report_info, empty_line, report_table])
 
-  report.build([report_title, report_main])
 
 
 
