@@ -7,7 +7,7 @@ from reportlab.platypus import SimpleDocTemplate
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import Paragraph, Spacer, Table, Image
 from reportlab.lib import colors
-from email.message import EmailMessage
+from emails import *
 
 
 def load_data(filename):
@@ -90,6 +90,12 @@ def main(argv):
     print(split_summary)
 
 
+  split_summary_mail = ""
+
+  for i in summary:
+    split_summary_mail += i + "\n\n"
+
+
   styles = getSampleStyleSheet()
   report = SimpleDocTemplate("cars.pdf")
   report_title = Paragraph("A complete report of car sales", styles["h1"])
@@ -106,6 +112,14 @@ def main(argv):
 
 
   # TODO: send the PDF report as an email attachment
+
+  sender = "automation@example.com"  
+  recipient = "<user>@example.com"
+  subject = "Sales summary for the last month"
+  body = split_summary_mail
+  attachment_path = "cars.pdf" #or abs/rel path
+
+  send(generate(sender, recipient, subject, body, attachment_path))
 
 
 if __name__ == "__main__":
